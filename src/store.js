@@ -14,8 +14,17 @@ let initialTodo = {
     dateUpdated
 
 }
+let anotherTodo = {
+    id: 0,
+    title: "Fix the bug:trech",
+    body: "I minimized the snub component to a much smaller level",
+    completed: false,
+    dateCreated,
+    dateUpdated
+
+}
 export const store = reactive({
-    todos: [initialTodo,initialTodo,initialTodo],
+    todos: [initialTodo,anotherTodo],
     create(obj){
         obj.id = this.todos.length + 1
         obj.completed = false
