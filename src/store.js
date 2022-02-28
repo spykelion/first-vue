@@ -17,12 +17,16 @@ let initialTodo = {
 export const store = reactive({
     todos: [initialTodo,initialTodo,initialTodo],
     create(obj){
-        const newTodo = obj
-        this.todos = [...this.todos, newTodo]
+        obj.id = this.todos.length + 1
+        obj.completed = false
+        obj.dateCreated = dateCreated
+        obj.dateUpdated = dateCreated
+        this.todos = [...this.todos, obj]
     },
-    todoss(){ return this.todos },
-    delete(todo){
-       this.todo =  this.todos.filter(t=>t!=todo)
+    allTodos(){ return this.todos },
+    delete(id){
+        console.log(id)
+       this.todos = this.todos.filter(t=>t.id!=id)
     },
     update(todo){
         let todoObject =  this.todos.filter(t=>t==todo)
