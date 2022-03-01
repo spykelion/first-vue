@@ -1,15 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router"
-
+import Todo from '../components/Todo.vue'
+import TodoDetails from '../components/TodoDetails.vue'
 const routes = [
     {
         path: '/',
         name: 'Home',
-        component: ''
+        component: Todo
     },
     {
         path: '/todo/:id',
-        name: 'Detail',
-        component: ''
+        name: 'TaskDetails',
+        component: TodoDetails
     },
 ]
 
