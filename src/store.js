@@ -26,21 +26,26 @@ let anotherTodo = {
 export const store = reactive({
     todos: [initialTodo,anotherTodo],
     create(obj){
-        // obj.id = this.todos.length + 1
-        // obj.completed = false
-        // obj.dateCreated = dateCreated
-        // obj.dateUpdated = dateCreated
-        // document.getElementById("overlay").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
         this.todos = [...this.todos, {id:this.todos.length+1, title: obj.title, body: obj.body, completed: false, dateCreated: Date.now().toLocaleString("en-US"), dateUpdated}]
-
     },
     allTodos(){ return this.todos },
     delete(id){
         console.log(id)
        this.todos = this.todos.filter(t=>t.id!=id)
     },
-    update(todo){
-        let todoObject =  this.todos.filter(t=>t==todo)
-        todoObject = todo
+    complete(id){
+        console.log(id)
+       let todo = this.todos.filter(t=>t.id==id);
+       todo.completed = !todo.completed;
+       console.log(this.todos)
     },
+    allDone(){
+        let count = 0;
+        this.todos.forEach(todo=>{
+            if(todo.completed)count++
+        })
+        if(count>0)return true
+        return false
+    }
 })

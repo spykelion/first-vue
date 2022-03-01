@@ -7,7 +7,17 @@ const mytodo = reactive({
   body: "",
 });
 
-const items = ["All", "Completed"];
+const show= ref({all:true, completed: false})
+
+function showAll(){
+    show.value.all = true
+    show.value.completed = false
+}
+function showCompleted(){
+    show.value.all = false
+    show.value.completed = true
+    // console.log(show.value)
+}
 function openOverlay() {
   document.getElementById("overlay").style.display = "flex";
 }
@@ -42,13 +52,9 @@ function closeOverlay() {
               role="textbox"
             ></textarea>
           </div>
-               <button id="add" class="action-button">
-            Add
-          </button>
+          <button id="add" class="action-button">Add</button>
         </form>
-        <div class="action">
-     
-        </div>
+        <div class="action"></div>
       </div>
     </div>
   </div>
@@ -60,17 +66,23 @@ function closeOverlay() {
     </header>
     <nav>
       <ul>
-        <li v-for="item in items" :key="item">
-          {{ item }}
+        <li @click="showAll" :class="{active: show.all}">
+         All
+        </li>
+          <li @click="showCompleted" :class="{active: show.completed}">
+         Completed
         </li>
       </ul>
     </nav>
     <ul class="todo-items">
-      <h3>{{ (store.todos.length < 1 && "No task today") || "" }}</h3>
-      <li v-for="todo in [...store.todos].reverse()" :key="todo.dateCreated">
-        <div class="items">
+      <h3>{{ ((store.todos.length < 1 || store.allDone()) && "No task today. ")|| "" }}</h3>
+      <li v-for="todo in [...store.todos].reverse()" :key="todo.id">
+       
+        <div v-if="!todo.completed && show.all">
+            <div class="items" >
           <div class="item">
             <input
+              @click="store.complete(todo.id)"
               type="checkbox"
               :name="todo.title"
               :id="todo.title"
@@ -95,6 +107,37 @@ function closeOverlay() {
             ><a href="">View details - {{ todo.id }}</a></small
           >
         </p>
+        </div>
+<div v-if="todo.completed && show.completed">
+            <div class="items" >
+          <div class="item">
+            <input
+              @click="store.complete(todo.id)"
+              type="checkbox"
+              :name="todo.title"
+              :id="todo.title"
+              v-model="todo.completed"
+              :value="todo.title"
+            />
+            <label :for="todo.title">
+              <h4>{{ todo.title }}</h4>
+              <p>{{ todo.body }}</p>
+            </label>
+          </div>
+          <button @click="store.delete(todo.id)">X</button>
+        </div>
+        <span>
+          <small
+            >Created at {{ todo.dateCreated }} | Updated at
+            {{ todo.dateUpdated }}</small
+          >
+        </span>
+        <p>
+          <small
+            ><a href="">View details - {{ todo.id }}</a></small
+          >
+        </p>
+        </div>
       </li>
       <p>
         <a href="">{{ (store.todos.length > 5 && "View all") || "" }}</a>
@@ -103,6 +146,7 @@ function closeOverlay() {
     </ul>
   </div>
 </template>
+
 
 <style lang="scss">
 header {
@@ -121,6 +165,15 @@ nav {
     flex-direction: row;
     gap: 1.2rem;
     justify-content: space-evenly;
+    li {
+        padding: .23rem;
+        border-radius: .4rem;
+        cursor: pointer;
+    }
+    .active {
+        background: #116acc;
+        color: #ffff;
+    }
   }
 }
 
@@ -139,7 +192,7 @@ button {
   }
 }
 .todo-items {
-  li {
+  li >div{
     // border: 1px solid;
     // display: flex;
     justify-content: space-between;
